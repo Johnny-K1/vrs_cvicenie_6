@@ -26,6 +26,7 @@
 #include "lis3mdltr.h"
 #include "lsm6ds0.h"
 #include "hts221.h"
+#include "lps25hb.h"
 #include "stdio.h"
 #include "string.h"
 #include "dma.h"
@@ -38,6 +39,7 @@ float mag[3], acc[3];
 char formated_text[30], value_x[10], value_y[10], value_z[10];
 float temp = 0.0;
 uint16_t humidity = 0;
+float pressure = 0.0;
 
 void SystemClock_Config(void);
 
@@ -58,14 +60,15 @@ int main(void)
 
   lsm6ds0_init();
   hts221_init();
-
+  lps25hb_init();
   while (1)
   {
 	  //os			   x      y        z
 	  hts221_get_temp(&temp);
 	  hts221_get_humidity(&humidity);
+	  lps25hb_get_pressure(&pressure);
 	  memset(formated_text, '\0', sizeof(formated_text));
-	  sprintf(formated_text, "%.1f,%d,0\r", temp, humidity);
+	  sprintf(formated_text, "%.1f,%d,0,%.2f\r", temp, humidity, pressure);
 	  USART2_PutBuffer((uint8_t*)formated_text, strlen(formated_text));
 	  LL_mDelay(10);
   }
