@@ -40,6 +40,8 @@ char formated_text[30], value_x[10], value_y[10], value_z[10];
 float temp = 0.0;
 uint16_t humidity = 0;
 float pressure = 0.0;
+float height = 0.0;
+float reference_height = 0.0;
 
 void SystemClock_Config(void);
 
@@ -66,11 +68,18 @@ int main(void)
 	  //os			   x      y        z
 	  hts221_get_temp(&temp);
 	  hts221_get_humidity(&humidity);
+	  if(reference_height == 0){
+		  lps25hb_get_pressure(&pressure);
+		  lps25hb_get_height(&height, pressure, temp, humidity,reference_height);
+		  reference_height = height;
+	  }
 	  lps25hb_get_pressure(&pressure);
+	  lps25hb_get_height(&height, pressure, temp, humidity, reference_height);
+
 	  memset(formated_text, '\0', sizeof(formated_text));
-	  sprintf(formated_text, "%.1f,%d,0,%.2f\r", temp, humidity, pressure);
+	  sprintf(formated_text, "%.1f,%d,0,%.2f,0,0,%.2f,0,0\r", temp, humidity, pressure, height);
 	  USART2_PutBuffer((uint8_t*)formated_text, strlen(formated_text));
-	  LL_mDelay(10);
+	  LL_mDelay((1/12.5)*1000);
   }
 }
 
