@@ -8,7 +8,6 @@
 #include "hts221.h"
 #include "math.h"
 
-#define roundz(x,d) ((floor(((x)*pow(10,d))+.5))/pow(10,d))
 
 uint8_t read_addres = HTS221_DEVICE_ADDRESS_READ;
 uint8_t write_addres = HTS221_DEVICE_ADDRESS_WRITE;
@@ -103,8 +102,6 @@ void hts221_get_temp(float *temp)
 	*temp = (float)tmp32 /(T1_out - T0_out) + T0_degC*10;
 
 	*temp = *temp/10;
-
-	*temp = roundz(*temp,1);
 }
 
 uint8_t hts221_init(void)
@@ -132,8 +129,8 @@ uint8_t hts221_init(void)
 	uint8_t ctrl1 = 131; // +-2g res
 	hts221_write_byte(HTS221_ADDRESS_CTRL1, ctrl1);
 
-	/*uint8_t av = 63; // +-2g res
-	hts221_write_byte(HTS221_ADDRESS_AV_CONF, av);*/
+	uint8_t av = 63; // +-2g res
+	hts221_write_byte(HTS221_ADDRESS_AV_CONF, av);
 
 	return status;
 }

@@ -16,6 +16,7 @@
 #define 	LPS25HB_WHO_AM_I_ADDRES					0x0F
 
 #define 	LPS25HB_ADDRESS_CTRL1					0x20
+#define 	LPS25HB_ADDRESS_AV_CONF					0x10
 
 #define 	LPS25HB_PRESS_OUT_XL					0x28
 #define 	LPS25HB_PRESS_OUT_L						0x29

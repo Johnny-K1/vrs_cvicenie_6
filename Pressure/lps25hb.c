@@ -7,7 +7,6 @@
 #include "lps25hb.h"
 #include "math.h"
 
-#define roundz(x,d) ((floor(((x)*pow(10,d))+.5))/pow(10,d))
 
 uint8_t read_addres_lps = LPS25HB_DEVICE_ADDRESS_READ_1;
 uint8_t write_addres_lps = LPS25HB_DEVICE_ADDRESS_WRITE_1;
@@ -46,7 +45,6 @@ void lps25hb_get_pressure(float *pressure){
 	pressure_counts = (temp << 8) | press_out_XL;
 
 	*pressure = pressure_counts/4096;
-	*pressure = roundz(*pressure,2);
 }
 
 void lps25hb_get_height(float* height, float pressure, float T, uint16_t RH, float reference_height){
@@ -64,7 +62,6 @@ void lps25hb_get_height(float* height, float pressure, float T, uint16_t RH, flo
 	double ro = (pd / (Rd * T1)) + (pv/(Rv*T1));
 
 	*height = (pressure/(g*ro))-reference_height;
-	*height = roundz(*height,2);
 }
 
 uint8_t lps25hb_init(void)
@@ -102,6 +99,9 @@ uint8_t lps25hb_init(void)
 
 	uint8_t ctrl1 = 176; // +-2g res
 	lps25hb_write_byte(LPS25HB_ADDRESS_CTRL1, ctrl1);
+
+	uint8_t av = 15; // +-2g res
+	lps25hb_write_byte(LPS25HB_ADDRESS_AV_CONF, av);
 
 
 	return status;
