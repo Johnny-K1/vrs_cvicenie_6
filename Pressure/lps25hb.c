@@ -48,20 +48,52 @@ void lps25hb_get_pressure(float *pressure){
 }
 
 void lps25hb_get_height(float* height, float pressure, float T, uint16_t RH, float reference_height){
-	double p = pressure*100;
-	double Rv = 461.495;
-	double Rd = 287.058;
+	/*float p = pressure*100;
+	float Rv = 461.495;
+	float Rd = 287.058;
 
-	double T1 = T + 273.15;
-	double g = 9.81;
+	float T1 = T + 273.15;
+	float g = 9.81;
 
-	double p1 = 6.1078 * pow(10,((7.5 * T)/(T+237.3)));
-	double pv = p1 * RH;
-	double pd = p - pv;
+	float p1 = 6.1078 * pow(10,((7.5 * T)/(T+237.3)));
+	float pv = p1 * RH;
+	float pd = p - pv;
 
-	double ro = (pd / (Rd * T1)) + (pv/(Rv*T1));
+	float ro = (pd / (Rd * T1)) + (pv/(Rv*T1));
 
-	*height = (pressure/(g*ro))-reference_height;
+	*height = (pressure/(g*ro))-reference_height;*/
+
+
+	float R = 8.31432;
+	float g = 9.81;
+	float M = 0.02896644;
+	float Pb = 101325;
+	float Tb = 288.15;
+
+	*height = ((R * Tb * log(pressure * 100 / Pb))/(-g * M)) - reference_height;
+
+	/*https://keisan.casio.com/exec/system/1224585971*/
+
+	/*float Pb = 1013.25;
+
+	*height = (( (pow(Pb/pressure, 1/5.257) - 1) * (T + 273.15) ) / 0.0065) - reference_height;*/
+
+
+	//https://www.omnicalculator.com/physics/air-pressure-at-altitude
+	/*float P0 = 101325;
+	float h0 = 0;
+	float T1 = T + 273.15;
+	float g = 9.80665;
+	float M = 0.0289644;
+	float R = 8.31432;
+
+	*height = (((R * T1 * log(pressure/P0)) / -(g * M)) + h0) - reference_height;*/
+
+	/*double temp = pow((pressure / 1013.25), 0.190284);
+	double height_in_feet = ((1 - temp) * 145366.45);
+	*height = (0.3048 * height_in_feet) - reference_height;*/
+
+
 }
 
 uint8_t lps25hb_init(void)
